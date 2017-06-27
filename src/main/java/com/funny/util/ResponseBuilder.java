@@ -170,7 +170,6 @@ public class ResponseBuilder {
 
     class ResponseShortVo implements IResponseVo {
         public int code;
-
         public String message;
         public ResponseShortVo(ResponseStatus responseStatus) {
             this.code = responseStatus.getCode();

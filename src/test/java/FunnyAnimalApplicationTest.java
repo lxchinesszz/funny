@@ -2,6 +2,8 @@
 import com.funny.FunnyAnimalApplication;
 import com.funny.model.domain.ImageObj;
 import com.google.gson.Gson;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,20 @@ public class FunnyAnimalApplicationTest {
         ImageObj build = builder.author(author).date(date).imgUrl(url).text(text).build();
 
         System.out.println(new Gson().toJson(build));
-//        mongoTemplate.save(build);
+        mongoTemplate.save(build);
     }
 
+    @Test
+    public void handlerConnectionMongo(){
+        MongoClient mongoClient = new MongoClient( "47.94.100.125" , 27017 );
+
+        // 连接到数据库
+        MongoDatabase mongoDatabase = mongoClient.getDatabase("funnyanimal");
+
+//        mongoDatabase.getCollection("funny_img");
+
+       mongoDatabase.createCollection("funny_img");
+
+        System.out.println(mongoDatabase.getCollection("funny_img").count());
+    }
 }

@@ -5,8 +5,10 @@ import com.funny.model.domain.ImageObj;
 import com.funny.service.ImgEveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,13 +22,13 @@ public class ImgEveryServiceImpl implements ImgEveryService {
 
     @Override
     public ImageObj getImage() {
-        List<ImageObj> imageAll = mongoTemplate.findAll(ImageObj.class);
-        return imageAll.get(0);
+        List<ImageObj> imageObjs = mongoTemplate.findAll(ImageObj.class);
+        return imageObjs.get(0);
     }
 
     @Override
     public List<ImageObj> getImageAsList() {
-        List<ImageObj> imageAll = mongoTemplate.findAll(ImageObj.class);
-        return imageAll;
+        List<ImageObj> imageObjList = mongoTemplate.findAll(ImageObj.class);
+        return imageObjList;
     }
 }

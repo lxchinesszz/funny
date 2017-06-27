@@ -20,7 +20,7 @@ public class FunnyController {
 
     @RequestMapping(value = "funyanimal/v1", method = RequestMethod.GET)
     public ResponseBuilder.IResponseVo getImage(String appKey) {
-        if (appKey.equalsIgnoreCase("funny")){
+        if (!appKey.equalsIgnoreCase("funny")){
             return ResponseBuilder.ERRORByJackson(1000,"缺少appKey");
         }
         ImageObj image = imgEveryService.getImage();
@@ -29,7 +29,7 @@ public class FunnyController {
 
     @RequestMapping(value = "funyanimal/v1/list", method = RequestMethod.GET)
     public ResponseBuilder.IResponseVo getImageAsList(String appKey) {
-        if (appKey.equalsIgnoreCase("funny")){
+        if (!appKey.equalsIgnoreCase("funny")){
             return ResponseBuilder.ERRORByJackson(1000,"缺少appKey");
         }
         List<ImageObj> imageAsList = imgEveryService.getImageAsList();
