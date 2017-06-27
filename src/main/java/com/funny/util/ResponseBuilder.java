@@ -113,8 +113,8 @@ public class ResponseBuilder {
      *
      * @return
      */
-    public static ResponseShortVo ERRORByJackson(Object responseStatus) {
-        ResponseShortVo responseShortVo = new ResponseBuilder().new ResponseShortVo(0,"");
+    public static ResponseShortVo ERRORByJackson(ResponseStatus responseStatus) {
+        ResponseShortVo responseShortVo = new ResponseBuilder().new ResponseShortVo(responseStatus.code,responseStatus.getMessage());
         return responseShortVo;
     }
 
@@ -177,9 +177,9 @@ public class ResponseBuilder {
         }
 
 
-        public ResponseShortVo(int code, String msg) {
+        public ResponseShortVo(int code, String message) {
             this.code = code;
-            this.message = msg;
+            this.message = message;
         }
 
         public int getCode() {

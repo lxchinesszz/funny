@@ -1,6 +1,8 @@
 package com.funny.service;
 
+import com.funny.model.domain.User;
 import org.springframework.stereotype.Service;
+
 
 
 /**
@@ -8,5 +10,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface UserService {
-    boolean isLogin();
+    User login(User user);
 }

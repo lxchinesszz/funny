@@ -23,7 +23,7 @@ public class FunnyAnimalApplicationTest {
     MongoTemplate mongoTemplate;
 
     @Test
-    public void testMongo(){
+    public void testMongo() {
         System.out.println(mongoTemplate.getDb().getName());
         List<ImageObj> all = mongoTemplate.findAll(ImageObj.class);
         System.out.println(all.get(0).getText());
@@ -31,11 +31,10 @@ public class FunnyAnimalApplicationTest {
 
     @Test
     public void insertMongo() {
-        String url = "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1498490936&di=81af350eb4ad63e53a203b65db3f1b5a&src=http://img5.duitang.com/uploads/item/201411/30/20141130235656_UuEFX.thumb.700_0.jpeg";
-        String date = "2017/6/27";
-        String author = "小安同学";
-        String text = "时间很短，天涯很远。一山一水，一朝一夕。";
-
+        String url = "http://img.yanj.cn/store/goods/2093/2093_75db88665f8edbf6db1bb500c64a5dc9.jpg_max.jpg";
+        String date = "2017/06/28";
+        String author = "小安";
+        String text = "驾驭命运的舵是奋斗。不抱有一丝幻想，不放弃一点机会，不停止一日努力。";
         ImageObj.ImageObjBuilder builder = ImageObj.builder();
         ImageObj build = builder.author(author).date(date).imgUrl(url).text(text).build();
 
@@ -44,16 +43,12 @@ public class FunnyAnimalApplicationTest {
     }
 
     @Test
-    public void handlerConnectionMongo(){
-        MongoClient mongoClient = new MongoClient( "47.94.100.125" , 27017 );
-
+    public void handlerConnectionMongo() {
+        MongoClient mongoClient = new MongoClient("47.94.100.125", 27017);
         // 连接到数据库
         MongoDatabase mongoDatabase = mongoClient.getDatabase("funnyanimal");
-
 //        mongoDatabase.getCollection("funny_img");
-
-       mongoDatabase.createCollection("funny_img");
-
+        mongoDatabase.createCollection("funny_img");
         System.out.println(mongoDatabase.getCollection("funny_img").count());
     }
 }

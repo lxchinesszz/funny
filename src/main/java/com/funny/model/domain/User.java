@@ -1,8 +1,11 @@
 package com.funny.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -11,23 +14,40 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Builder
 @Document(collection = "funny_user")
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties("id")
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class User {
     /**
      * 用户唯一Id
      */
     private String uid;
+
+    /**
+     * 性别
+     */
+    private String gender;
     /**
      * 要有校验规则
      * 昵称
      */
-    private String userName;
+    private String name;
     /**
-     * 用户密码使用哈希计算保护
+     * 用户token
      */
-    private String password;
+    private String accessToken;
+
     /**
      * 用户头像
      */
-    private String userLogo;
+    private String iconurl;
+    /**
+     * 城市
+     */
+    private String city;
+    /**
+     * 身份
+     */
+    private String province;
 }

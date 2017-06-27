@@ -1,5 +1,6 @@
 package com.funny.rest;
 
+import com.funny.config.status.ResponseStatus;
 import com.funny.model.domain.ImageObj;
 import com.funny.service.ImgEveryService;
 import com.funny.util.ResponseBuilder;
@@ -21,7 +22,7 @@ public class FunnyController {
     @RequestMapping(value = "funyanimal/v1", method = RequestMethod.GET)
     public ResponseBuilder.IResponseVo getImage(String appKey) {
         if (!appKey.equalsIgnoreCase("funny")){
-            return ResponseBuilder.ERRORByJackson(1000,"缺少appKey");
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_APPKEY);
         }
         ImageObj image = imgEveryService.getImage();
         return ResponseBuilder.SUCCESSByJackson(image);
@@ -30,7 +31,7 @@ public class FunnyController {
     @RequestMapping(value = "funyanimal/v1/list", method = RequestMethod.GET)
     public ResponseBuilder.IResponseVo getImageAsList(String appKey) {
         if (!appKey.equalsIgnoreCase("funny")){
-            return ResponseBuilder.ERRORByJackson(1000,"缺少appKey");
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_APPKEY);
         }
         List<ImageObj> imageAsList = imgEveryService.getImageAsList();
         return ResponseBuilder.SUCCESSByJackson(imageAsList);
