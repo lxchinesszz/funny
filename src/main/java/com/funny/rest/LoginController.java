@@ -1,14 +1,18 @@
 package com.funny.rest;
 
+import com.funny.config.status.ResponseStatus;
 import com.funny.model.domain.User;
 import com.funny.service.UserService;
+import com.funny.util.CheckUserUtils;
 import com.funny.util.ResponseBuilder;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mac on 2017/6/27.
@@ -18,9 +22,15 @@ public class LoginController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/funnyanimal/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    /**
+     * QQ联合登录
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/funnyanimal/ally/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseBuilder.IResponseVo login(@RequestBody User user) {
-        String userLoginMsg = checkUserLoginInfo(user);
+        String userLoginMsg = CheckUserUtils.checkUserLoginInfo(user);
         if (!StringUtils.isEmpty(userLoginMsg)) {
             return ResponseBuilder.ERRORByJackson(10001, userLoginMsg);
         }
@@ -28,17 +38,94 @@ public class LoginController {
         return ResponseBuilder.SUCCESSByJackson(login);
     }
 
-    public String checkUserLoginInfo(User user) {
-        StringBuilder sb = new StringBuilder();
-        if (StringUtils.isEmpty(user.getUid())) {
-            sb.append("[uid不能为空]");
-            if (StringUtils.isEmpty(user.getName())) {
-                sb.append("[用户名不能为空]");
-            }
+    /**
+     * 校验该用户手机号是否已经注册过
+     *
+     * @param userPhone
+     * @return
+     */
+    @RequestMapping(value = "/funnyanimal/user/isRegister", method = RequestMethod.POST)
+    public ResponseBuilder.IResponseVo isRegister(String userPhone) {
+        if (StringUtils.isEmpty(userPhone)) {
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERPHONE);
         }
-        if (StringUtils.isEmpty(user.getIconurl())) {
-            sb.append("用户头像地址非法");
+        if (userService.isRegister(userPhone)) {
+            return ResponseBuilder.SUCCESSByJackson();
         }
-        return sb.toString();
+        return ResponseBuilder.ERRORByJackson(ResponseStatus.EXIST_USER);
     }
+
+    /**
+     * 用户注册
+     * 用用户手机号唯一标识,当用户名为空，就讲name改为喵星人
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/funnyanimal/user/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    public ResponseBuilder.IResponseVo register(@RequestBody User user) {
+        if (StringUtils.isEmpty(user.getUserPhone())) {
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
+        }
+        if (StringUtils.isEmpty(user.getPassword())) {
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USER_PASS);
+        }
+        User register = userService.register(user);
+        String accessToken = register.getAccessToken();
+        Map map = new HashMap();
+        map.put("accessToken", accessToken);
+        return ResponseBuilder.SUCCESSByJackson(map);
+    }
+
+    /**
+     * 本平台用户登陆
+     * 通过用户手机号和密码验证
+     *
+     * @param userPhone 用户手机号
+     * @param password  用户密码
+     * @return
+     */
+    @RequestMapping(value = "/funnyanimal/user/login", method = RequestMethod.POST, produces = "application/json")
+    public ResponseBuilder.IResponseVo loginByNative(String userPhone, String password) {
+        if (StringUtils.isEmpty(userPhone)) {
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
+        }
+        User login = userService.login(userPhone, password);
+        if (ObjectUtils.isEmpty(login)) {
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERPHONE_OR_PASS);
+        }
+        return ResponseBuilder.SUCCESSByJackson(login);
+
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param userPhone 用户手机号
+     * @param name      用户名
+     * @param password  用户密码
+     * @param iconurl   用户头像
+     * @param gender    用户性别
+     * @param province  省
+     * @param city      城市
+     * @return
+     */
+    @RequestMapping(value = "/funnyanimal/user/update", method = RequestMethod.POST, produces = "application/json")
+    public ResponseBuilder.IResponseVo updateUserInfo(String userPhone,
+                                                      String name,
+                                                      String password,
+                                                      String iconurl,
+                                                      String gender,
+                                                      String province,
+                                                      String city,
+                                                      String accessToken) {
+
+        User build = User.builder().accessToken(accessToken).userPhone(userPhone).name(name).password(password).iconurl(iconurl).gender(gender).province(province).city(city).build();
+        User user = userService.updateUser(build);
+        if (ObjectUtils.isEmpty(user)) {
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
+        }
+        return ResponseBuilder.SUCCESSByJackson(user);
+    }
+
 }

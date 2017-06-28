@@ -51,4 +51,5 @@ public class FunnyAnimalApplicationTest {
         mongoDatabase.createCollection("funny_img");
         System.out.println(mongoDatabase.getCollection("funny_img").count());
     }
+
 }

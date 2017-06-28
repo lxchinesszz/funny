@@ -14,7 +14,16 @@ public enum ResponseStatus {
 
     SUCCESS(0, "处理成功"),
 
-    CHECK_APPKEY(1000,"缺少appKey");
+    EXIST_USER(10000,"该用户手机号已经注册"),
+
+    CHECK_APPKEY(1000,"缺少appKey"),
+
+    CHECK_USERID(1002,"检查用户唯一标识"),
+
+    CHECK_USERPHONE(1001,"手机号不能为空"),
+    CHECK_USER_PASS(1004,"请输入用户密码"),
+
+    CHECK_USERPHONE_OR_PASS(1003,"请检查用户手机号或者用户密码");
 
 
     ResponseStatus(int code, String message) {

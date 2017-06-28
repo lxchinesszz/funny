@@ -16,13 +16,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "funny_user")
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties("id")
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonIgnoreProperties(value = {"id","password"})
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class User {
     /**
      * 用户唯一Id
      */
     private String uid;
+
+    /**
+     * 用户密码
+     */
+    private String password;
 
     /**
      * 性别
@@ -50,4 +55,9 @@ public class User {
      * 身份
      */
     private String province;
+
+    /**
+     * 用户手机号
+     */
+    private String userPhone;
 }

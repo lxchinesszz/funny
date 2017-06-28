@@ -25,18 +25,18 @@ public class MongoDao {
     MongoTemplate mongoTemplate;
 
     /**
-     * 根据用户id查询用户信息
      *
-     * @param uid
-     * @param t
+     * @param t 返回类型
+     * @param queryKey key
+     * @param queryValue value
      * @param <T>
      * @return
      */
-    public <T> T findOneByUserId(String uid, Class<T> t) {
-        Assert.notNull(uid, "用户id不能为空");
-        Query query = Query.query(Criteria.where("uid").is(uid));
+    public <T> T findOneByQuery(Class<T> t, String queryKey, String queryValue) {
+        Query query = Query.query(Criteria.where(queryKey).is(queryValue));
         return mongoTemplate.findOne(query, t);
     }
+
 
     /**
      * 判断用户是否存在
@@ -47,6 +47,35 @@ public class MongoDao {
     public boolean isExistUser(String uid) {
         Assert.notNull(uid, "用户id不能为空");
         Query query = Query.query(Criteria.where("uid").is(uid));
+        User user = mongoTemplate.findOne(query, User.class);
+        if (ObjectUtils.isEmpty(user)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 通过用户手机号和密码，判断用户是否存在
+     *
+     * @param userPhone 用户手机号
+     * @param password  用户密码
+     * @return
+     */
+    public User isExistUser(String userPhone, String password) {
+        Query query = Query.query(Criteria.where("userPhone").is(userPhone).and("password").is(password));
+        User user = mongoTemplate.findOne(query, User.class);
+        return user;
+    }
+
+    /**
+     * 判断用户是否存在
+     *
+     * @param userPhone
+     * @return
+     */
+    public boolean isExistUserByPhone(String userPhone) {
+        Assert.notNull(userPhone, "用户手机号不能为空");
+        Query query = Query.query(Criteria.where("userPhone").is(userPhone));
         User user = mongoTemplate.findOne(query, User.class);
         if (ObjectUtils.isEmpty(user)) {
             return false;
