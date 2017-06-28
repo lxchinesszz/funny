@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class FunnyController {
     @Autowired
     ImgEveryService imgEveryService;
 
-    @RequestMapping(value = "funyanimal/v1", method = RequestMethod.GET)
+    @RequestMapping(value = "funnyanimal/v1", method = RequestMethod.GET)
     public ResponseBuilder.IResponseVo getImage(String appKey) {
         if (!appKey.equalsIgnoreCase("funny")){
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_APPKEY);
@@ -28,7 +29,7 @@ public class FunnyController {
         return ResponseBuilder.SUCCESSByJackson(image);
     }
 
-    @RequestMapping(value = "funyanimal/v1/list", method = RequestMethod.GET)
+    @RequestMapping(value = "funnyanimal/v1/list", method = RequestMethod.GET)
     public ResponseBuilder.IResponseVo getImageAsList(String appKey) {
         if (!appKey.equalsIgnoreCase("funny")){
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_APPKEY);
@@ -36,4 +37,5 @@ public class FunnyController {
         List<ImageObj> imageAsList = imgEveryService.getImageAsList();
         return ResponseBuilder.SUCCESSByJackson(imageAsList);
     }
+
 }
