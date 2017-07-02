@@ -21,12 +21,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ResponseException extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(ResponseException.class);
 
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    ResponseEntity handleControllerException(Exception ex) {
-        logger.error("exception message:{}", ex.getMessage());
-        return new ResponseEntity(new CustoError(10000, "小喵出去散了一个步~"), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseBody
+//    ResponseEntity handleControllerException(Exception ex) {
+//        logger.error("exception message:{}", ex.getMessage());
+//        return new ResponseEntity(new CustoError(10000, "小喵出去散了一个步~"), HttpStatus.BAD_REQUEST);
+//    }
 
 
     @ExceptionHandler(IllegalParamException.class)
