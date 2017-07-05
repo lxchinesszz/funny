@@ -14,6 +14,8 @@ public enum ResponseStatus {
 
     SUCCESS(0, "处理成功"),
 
+    ERROR(10000,"处理失败"),
+
     EXIST_USER(10000,"该用户手机号已经注册"),
 
     CHECK_APPKEY(1000,"缺少appKey"),

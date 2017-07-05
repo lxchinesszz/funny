@@ -5,6 +5,7 @@ import com.funny.model.domain.ImageObj;
 import com.funny.service.ImgEveryService;
 import com.funny.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,4 +39,12 @@ public class FunnyController {
         return ResponseBuilder.SUCCESSByJackson(imageAsList);
     }
 
+    @RequestMapping(value = "funnyanimal/v1/image/token", method = RequestMethod.GET)
+    public ResponseBuilder.IResponseVo getImageToken(String fileName){
+        String imageToken=imgEveryService.getImageToken(fileName);
+        if (StringUtils.isEmpty(imageToken)){
+            return ResponseBuilder.ERRORByJackson(ResponseStatus.ERROR);
+        }
+        return ResponseBuilder.SUCCESSByJackson(imageToken);
+    }
 }

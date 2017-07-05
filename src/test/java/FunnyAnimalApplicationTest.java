@@ -1,9 +1,11 @@
 
 import com.funny.FunnyAnimalApplication;
 import com.funny.model.domain.ImageObj;
+import com.funny.service.ImgEveryService;
 import com.google.gson.Gson;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import org.hibernate.validator.constraints.br.TituloEleitoral;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ import java.util.List;
 public class FunnyAnimalApplicationTest {
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Autowired
+    ImgEveryService imgEveryService;
 
     @Test
     public void testMongo() {
@@ -50,6 +55,11 @@ public class FunnyAnimalApplicationTest {
 //        mongoDatabase.getCollection("funny_img");
         mongoDatabase.createCollection("funny_img");
         System.out.println(mongoDatabase.getCollection("funny_img").count());
+    }
+
+    @Test
+    public void testToImageByToken() {
+        System.out.println(imgEveryService.getImageToken());
     }
 
 }

@@ -22,4 +22,11 @@ public interface ImgEveryService {
      * @return
      */
     List<ImageObj> getImageAsList();
+
+    /**
+     * 获取上传图片的token
+     * @param fileName 文件名
+     * @return
+     */
+    String getImageToken(String fileName);
 }
