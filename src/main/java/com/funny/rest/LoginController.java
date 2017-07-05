@@ -81,12 +81,14 @@ public class LoginController {
      * 本平台用户登陆
      * 通过用户手机号和密码验证
      *
-     * @param userPhone 用户手机号
-     * @param password  用户密码
+     * @param-userPhone 用户手机号
+     * @param-password  用户密码
      * @return
      */
     @RequestMapping(value = "/funnyanimal/user/login", method = RequestMethod.POST, produces = "application/json")
-    public ResponseBuilder.IResponseVo loginByNative(String userPhone, String password) {
+    public ResponseBuilder.IResponseVo loginByNative(@RequestBody User user) {
+        String userPhone = user.getUserPhone();
+        String password = user.getPassword();
         if (StringUtils.isEmpty(userPhone)) {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
         }
@@ -101,27 +103,17 @@ public class LoginController {
     /**
      * 修改用户信息
      *
-     * @param userPhone 用户手机号
-     * @param name      用户名
-     * @param password  用户密码
-     * @param iconurl   用户头像
-     * @param gender    用户性别
-     * @param province  省
-     * @param city      城市
+     * @param-userPhone 用户手机号
+     * @param-name      用户名
+     * @param-password  用户密码
+     * @param-iconurl   用户头像
+     * @param-gender    用户性别
+     * @param-province  省
+     * @param-city      城市
      * @return
      */
     @RequestMapping(value = "/funnyanimal/user/update", method = RequestMethod.POST, produces = "application/json")
-    public ResponseBuilder.IResponseVo updateUserInfo(String userPhone,
-                                                      String name,
-                                                      String password,
-                                                      String iconurl,
-                                                      String gender,
-                                                      String province,
-                                                      String city,
-                                                      String accessToken) {
-
-        User build = User.builder().accessToken(accessToken).userPhone(userPhone).name(name).password(password).iconurl(iconurl).gender(gender).province(province).city(city).build();
-        User user = userService.updateUser(build);
+    public ResponseBuilder.IResponseVo updateUserInfo(@RequestBody User user) {
         if (ObjectUtils.isEmpty(user)) {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
         }
