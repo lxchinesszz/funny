@@ -64,14 +64,16 @@ public class MyShiroRealm extends AuthorizingRealm {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authcToken;
         //TODO 根据用户名和用户密码判断用户，用户验证成功，就把用户名和用户密码放行
         String userName = usernamePasswordToken.getUsername();
-        Admin user = mongoDao.findOneByQuery(Admin.class, "userName", usernamePasswordToken.getUsername());
+//        Admin user = mongoDao.findOneByQuery(Admin.class, "userName", usernamePasswordToken.getUsername());
         String pwd = String.valueOf(usernamePasswordToken.getPassword());
-        if (ObjectUtils.isEmpty(user)){
-            throw new IncorrectCredentialsException();
-        }
-        if (StringUtils.endsWithIgnoreCase(user.getPassword(), pwd)) {
-            return new SimpleAuthenticationInfo(userName, pwd, getName());
-        }
-        return null;
+
+        return new SimpleAuthenticationInfo(userName, pwd, getName());
+//        if (ObjectUtils.isEmpty(user)){
+//            throw new IncorrectCredentialsException();
+//        }
+//        if (StringUtils.endsWithIgnoreCase(user.getPassword(), pwd)) {
+//            return new SimpleAuthenticationInfo(userName, pwd, getName());
+//        }
+//        return null;
     }
 }
