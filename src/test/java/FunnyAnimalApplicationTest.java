@@ -5,6 +5,9 @@ import com.funny.service.ImgEveryService;
 import com.google.gson.Gson;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import com.qiniu.common.Zone;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.hibernate.validator.constraints.br.TituloEleitoral;
@@ -15,6 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.security.auth.login.Configuration;
+import javax.xml.ws.Response;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -60,7 +66,7 @@ public class FunnyAnimalApplicationTest {
     }
 
     @Test
-    public void testToImageByToken() {
+    public void testToImageByToken() throws Exception {
         String ak = "3jws4LSQj3Nwi_bWktpNReSf2Rh4D4CU6rTcZlrA";
         String sk = "WrROm6H4tHqcQ5ZlosarRLIXn1OE8WcKv9XtSpTF";
         String bucket = "funny";
@@ -68,9 +74,22 @@ public class FunnyAnimalApplicationTest {
         Auth auth = Auth.create(ak, sk);
 
         StringMap putPolicy = new StringMap();
-        putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
-        String ke=auth.uploadToken(bucket, null, expireSeconds, putPolicy);
-        System.out.println(ke);
+        putPolicy.put("insertOnly", 0);
+//        putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
+        String ke = auth.uploadToken(bucket,
+                "13162211551.png", expireSeconds, putPolicy);
+
+        com.qiniu.storage.Configuration cfg = new com.qiniu.storage.Configuration(Zone.zone2());
+//...其他参数参考类注释
+        UploadManager uploadManager = new UploadManager(cfg);
+
+
+//        file
+        com.qiniu.http.Response response = uploadManager.put("/Users/liuxin/Downloads/红色球衣.jpeg", "13162211551.png", ke);
+        //解析上传成功的结果
+        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+        System.out.println(putRet.key);
+        System.out.println(putRet.hash);
     }
 
 }

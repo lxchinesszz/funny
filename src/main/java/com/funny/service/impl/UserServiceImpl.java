@@ -3,6 +3,7 @@ package com.funny.service.impl;
 import com.funny.model.dao.MongoDao;
 import com.funny.model.domain.User;
 import com.funny.service.UserService;
+import com.funny.util.QiniuImages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,8 @@ public class UserServiceImpl implements UserService {
         }
         String accessToken = UUID.randomUUID().toString().replace("-", "").toUpperCase();
         user.setAccessToken(accessToken);
+        String qiniuImgUrl = QiniuImages.getQiniuImgUrl(user.getIconurl());
+        user.setIconurl(qiniuImgUrl);
         return mongoDao.saveUser(user);
     }
 

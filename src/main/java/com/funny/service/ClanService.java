@@ -26,9 +26,15 @@ public interface ClanService {
     //TODO 点赞
 
     /**
-     *
      * @param tid 说说id
      * @param uid 点赞的用户
      */
-    void pointGood(String tid,String uid);
+    void pointGood(String tid, String uid);
+
+    /**
+     * 获取指定时间段说说，根据分页
+     *
+     * @return
+     */
+//    String getSayInfo();
 }

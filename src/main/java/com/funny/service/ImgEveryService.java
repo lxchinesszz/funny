@@ -25,8 +25,15 @@ public interface ImgEveryService {
 
     /**
      * 获取上传图片的token
-     * @param  文件名
+     * @param
      * @return
      */
     String getImageToken();
+
+    /**
+     * 覆盖文件凭证
+     * @param fileModify
+     * @return
+     */
+    String getModifyImageToken(String fileModify);
 }

@@ -4,6 +4,7 @@ import com.funny.model.dao.MongoDao;
 import com.funny.model.domain.LeaveTable;
 import com.funny.model.domain.SayTable;
 import com.funny.service.ClanService;
+import com.funny.util.QiniuImages;
 import com.funny.util.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,6 +28,13 @@ public class ClanServiceImpl implements ClanService {
         //TODO 生成TID和日期
         sayTable.setTimestamp(new Date().getTime());
         sayTable.setTid(UUIDUtils.randomUUID());
+        List<String> imgs = sayTable.getImgs();
+        List<String> imgUrls = new LinkedList<>();
+        for (String image:imgs){
+            String qiniuImgUrl = QiniuImages.getQiniuImgUrl(image);
+            imgUrls.add(qiniuImgUrl);
+        }
+        sayTable.setImgs(imgUrls);
         mongoDao.save(sayTable, SayTable.class);
     }
 
