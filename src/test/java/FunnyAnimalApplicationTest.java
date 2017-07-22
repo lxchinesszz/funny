@@ -5,6 +5,8 @@ import com.funny.service.ImgEveryService;
 import com.google.gson.Gson;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import org.hibernate.validator.constraints.br.TituloEleitoral;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,7 +61,18 @@ public class FunnyAnimalApplicationTest {
 
     @Test
     public void testToImageByToken() {
-        System.out.println(imgEveryService.getImageToken());
+        String ak = "3jws4LSQj3Nwi_bWktpNReSf2Rh4D4CU6rTcZlrA";
+        String sk = "WrROm6H4tHqcQ5ZlosarRLIXn1OE8WcKv9XtSpTF";
+        String bucket = "funny";
+        String key="13162211551";
+        long expireSeconds = 3600L;
+        Auth auth = Auth.create(ak, sk);
+        StringMap putPolicy = new StringMap();
+        putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
+        String ke=auth.uploadToken(bucket, key, expireSeconds, putPolicy);
+
+//        auth.privateDownloadUrl();
+        System.out.println(ke);
     }
 
 }

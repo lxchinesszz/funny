@@ -25,9 +25,8 @@ public class MongoDao {
     MongoTemplate mongoTemplate;
 
     /**
-     *
-     * @param t 返回类型
-     * @param queryKey key
+     * @param t          返回类型
+     * @param queryKey   key
      * @param queryValue value
      * @param <T>
      * @return
@@ -92,6 +91,18 @@ public class MongoDao {
     public User saveUser(User user) {
         mongoTemplate.save(user);
         return user;
+    }
+
+    /**
+     * 保存任意类型
+     * @param object
+     * @param cls
+     * @param <T>
+     * @return
+     */
+    public <T> T save(Object object, Class<T> cls) {
+        mongoTemplate.save(object);
+        return cls.cast(object);
     }
 
 

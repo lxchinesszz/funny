@@ -39,15 +39,14 @@ public class ImgEveryServiceImpl implements ImgEveryService {
     }
 
     @Override
-    public String getImageToken(String fileName) {
+    public String getImageToken() {
         String ak = environment.getProperty("qiniu.ak");
         String sk = environment.getProperty("qiniu.sk");
         String bucket = environment.getProperty("qiniu.bucket");
-        String key = fileName;
         long expireSeconds = 3600L;
         Auth auth = Auth.create(ak, sk);
         StringMap putPolicy = new StringMap();
         putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
-        return auth.uploadToken(bucket, key, expireSeconds, putPolicy);
+        return auth.uploadToken(bucket, null, expireSeconds, putPolicy);
     }
 }

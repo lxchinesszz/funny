@@ -4,6 +4,7 @@ import com.funny.config.status.ResponseStatus;
 import com.funny.model.domain.ImageObj;
 import com.funny.service.ImgEveryService;
 import com.funny.util.ResponseBuilder;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mac on 2017/6/26.
@@ -39,12 +42,19 @@ public class FunnyController {
         return ResponseBuilder.SUCCESSByJackson(imageAsList);
     }
 
+    /**
+     * 返回token
+     * @param
+     * @return
+     */
     @RequestMapping(value = "funnyanimal/v1/image/token", method = RequestMethod.GET)
-    public ResponseBuilder.IResponseVo getImageToken(String fileName){
-        String imageToken=imgEveryService.getImageToken(fileName);
+    public ResponseBuilder.IResponseVo getImageToken(){
+        String imageToken=imgEveryService.getImageToken();
+        Map jsonObject=new HashMap();
+        jsonObject.put("token",imageToken);
         if (StringUtils.isEmpty(imageToken)){
             return ResponseBuilder.ERRORByJackson(ResponseStatus.ERROR);
         }
-        return ResponseBuilder.SUCCESSByJackson(imageToken);
+        return ResponseBuilder.SUCCESSByJackson(jsonObject);
     }
 }
