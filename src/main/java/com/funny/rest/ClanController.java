@@ -23,6 +23,11 @@ public class ClanController {
     @Autowired
     ClanService clanService;
 
+    /**
+     * 发说说
+     * @param sayTable
+     * @return
+     */
     @RequestMapping(value = "funnyanimal/v1/say", method = RequestMethod.POST)
     public ResponseBuilder.IResponseVo addSay(@RequestBody SayTable sayTable) {
         if (StringUtils.isEmpty(sayTable.getUid())) {
@@ -32,6 +37,11 @@ public class ClanController {
         return ResponseBuilder.SUCCESSByJackson();
     }
 
+    /**
+     * 回帖
+     * @param boby
+     * @return
+     */
     @RequestMapping(value = "funnyanimal/v1/leave", method = RequestMethod.POST)
     public ResponseBuilder.IResponseVo addSay(@RequestBody Map boby) {
         if (StringUtils.isEmpty((String) boby.get("uid"))) {
@@ -45,6 +55,11 @@ public class ClanController {
         return ResponseBuilder.SUCCESSByJackson();
     }
 
+    /**
+     * 点赞
+     * @param boby
+     * @return
+     */
     @RequestMapping(value = "funnyanimal/v1/point", method = RequestMethod.POST)
     public ResponseBuilder.IResponseVo point(@RequestBody Map boby) {
         String uid = (String) boby.get("uid");

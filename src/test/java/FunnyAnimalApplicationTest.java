@@ -64,14 +64,12 @@ public class FunnyAnimalApplicationTest {
         String ak = "3jws4LSQj3Nwi_bWktpNReSf2Rh4D4CU6rTcZlrA";
         String sk = "WrROm6H4tHqcQ5ZlosarRLIXn1OE8WcKv9XtSpTF";
         String bucket = "funny";
-        String key="13162211551";
-        long expireSeconds = 3600L;
+        long expireSeconds = 10;
         Auth auth = Auth.create(ak, sk);
+
         StringMap putPolicy = new StringMap();
         putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
-        String ke=auth.uploadToken(bucket, key, expireSeconds, putPolicy);
-
-//        auth.privateDownloadUrl();
+        String ke=auth.uploadToken(bucket, null, expireSeconds, putPolicy);
         System.out.println(ke);
     }
 

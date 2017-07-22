@@ -24,7 +24,7 @@ public class ClanServiceImpl implements ClanService {
     @Override
     public void addSay(SayTable sayTable) {
         //TODO 生成TID和日期
-        sayTable.setDate(new Date());
+        sayTable.setTimestamp(new Date().getTime());
         sayTable.setTid(UUIDUtils.randomUUID());
         mongoDao.save(sayTable, SayTable.class);
     }

@@ -46,6 +46,7 @@ public class ImgEveryServiceImpl implements ImgEveryService {
         long expireSeconds = 3600L;
         Auth auth = Auth.create(ak, sk);
         StringMap putPolicy = new StringMap();
+        putPolicy.put("insertOnly", 0);
         putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
         return auth.uploadToken(bucket, null, expireSeconds, putPolicy);
     }

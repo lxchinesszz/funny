@@ -47,10 +47,21 @@ public class SayTable {
     /**
      * 发布日期
      */
-    private Date date;
+    private Long timestamp;
 
     /**
      * 留言用户
      */
     private String[]leave;
+
+    /**
+     * 城市名
+     */
+    private String cityName;
+
+    /**
+     * 使用逗号分隔
+     * 21321,43535
+     */
+    private String location;
 }
