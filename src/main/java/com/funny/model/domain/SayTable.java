@@ -25,6 +25,11 @@ import java.util.List;
 public class SayTable {
     @Id
     private String id;
+
+    /**
+     * 文章标题
+     */
+    private String title;
     /**
      * 唯一id
      */
