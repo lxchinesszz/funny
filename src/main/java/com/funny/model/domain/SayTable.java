@@ -1,11 +1,15 @@
 package com.funny.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.GsonBuilder;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +18,8 @@ import java.util.List;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "funny_say")
 @JsonIgnoreProperties("id")
 public class SayTable {
@@ -37,7 +43,7 @@ public class SayTable {
     /**
      * 发表图片
      */
-    private List<String>imgs;
+    private List<String> imgs;
 
     /**
      * 点赞的人的id
@@ -52,7 +58,7 @@ public class SayTable {
     /**
      * 留言用户
      */
-    private String[]leave;
+    private String[] leave;
 
     /**
      * 城市名
@@ -64,4 +70,14 @@ public class SayTable {
      * 21321,43535
      */
     private String location;
+
+    public static void main(String[] args) {
+        List<String> imgs = new ArrayList<>();
+        imgs.add("test");
+        imgs.add("test1");
+        SayTable build = SayTable.builder().imgs(imgs).text("tesxts").location("sh").cityName("shagnhai").uid("test").build();
+
+        String s = new GsonBuilder().setPrettyPrinting().create().toJson(build);
+        System.out.println(s);
+    }
 }
