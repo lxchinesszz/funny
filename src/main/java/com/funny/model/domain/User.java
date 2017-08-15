@@ -63,4 +63,8 @@ public class User {
      * 用户手机号
      */
     private String userPhone;
+    /**
+     * 签名
+     */
+    private String moto;
 }

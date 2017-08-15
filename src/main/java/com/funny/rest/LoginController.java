@@ -71,10 +71,10 @@ public class LoginController {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USER_PASS);
         }
         User register = userService.register(user);
-        String accessToken = register.getAccessToken();
-        Map map = new HashMap();
-        map.put("accessToken", accessToken);
-        return ResponseBuilder.SUCCESSByJackson(map);
+//        String accessToken = register.getAccessToken();
+//        Map map = new HashMap();
+//        map.put("accessToken", accessToken);
+        return ResponseBuilder.SUCCESSByJackson(register);
     }
 
     /**

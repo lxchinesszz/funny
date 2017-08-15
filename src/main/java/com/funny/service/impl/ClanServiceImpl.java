@@ -29,12 +29,14 @@ public class ClanServiceImpl implements ClanService {
         sayTable.setTimestamp(new Date().getTime());
         sayTable.setTid(UUIDUtils.randomUUID());
         List<String> imgs = sayTable.getImgs();
-        List<String> imgUrls = new LinkedList<>();
-        for (String image:imgs){
-            String qiniuImgUrl = QiniuImages.getQiniuImgUrl(image);
-            imgUrls.add(qiniuImgUrl);
+        if (imgs.size() > 0) {
+            List<String> imgUrls = new LinkedList<>();
+            for (String image : imgs) {
+                String qiniuImgUrl = QiniuImages.getQiniuImgUrl(image);
+                imgUrls.add(qiniuImgUrl);
+            }
+            sayTable.setImgs(imgUrls);
         }
-        sayTable.setImgs(imgUrls);
         mongoDao.save(sayTable, SayTable.class);
     }
 
@@ -51,7 +53,7 @@ public class ClanServiceImpl implements ClanService {
         List praises = sayTable.getPraises();
         praises.add(uid);
         sayTable.setPraises(praises);
-        mongoDao.save(sayTable,SayTable.class);
+        mongoDao.save(sayTable, SayTable.class);
 
     }
 }
