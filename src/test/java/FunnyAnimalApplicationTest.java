@@ -1,8 +1,12 @@
 
 import com.funny.FunnyAnimalApplication;
+import com.funny.model.dao.SayTableDao;
 import com.funny.model.domain.ImageObj;
+import com.funny.model.domain.SayTable;
 import com.funny.service.ImgEveryService;
+import com.funny.util.PageUtils;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.qiniu.common.Zone;
@@ -15,6 +19,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,6 +40,18 @@ public class FunnyAnimalApplicationTest {
 
     @Autowired
     ImgEveryService imgEveryService;
+
+
+    @Autowired
+    SayTableDao sayTableDao;
+
+    @Test
+    public void page() {
+        PageRequest pageRequest = PageUtils.buildPageRequest(1, 2);
+        Page<SayTable> timestamp = sayTableDao.findAll(pageRequest);
+        List<SayTable> content = timestamp.getContent();
+        System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(content));
+    }
 
     @Test
     public void testMongo() {

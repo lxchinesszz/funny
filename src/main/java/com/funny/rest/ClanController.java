@@ -25,6 +25,17 @@ public class ClanController {
 
     /**
      * 发说说
+     *
+     * @return
+     */
+    @RequestMapping(value = "funnyanimal/v1/say/page", method = RequestMethod.GET)
+    public ResponseBuilder.IResponseVo addSay(int pageNumber, int pageSize) {
+        return clanService.getSayInfo(pageNumber, pageSize);
+    }
+
+    /**
+     * 发说说
+     *
      * @param sayTable
      * @return
      */
@@ -39,6 +50,7 @@ public class ClanController {
 
     /**
      * 回帖
+     *
      * @param boby
      * @return
      */
@@ -57,6 +69,7 @@ public class ClanController {
 
     /**
      * 点赞
+     *
      * @param boby
      * @return
      */
@@ -67,10 +80,10 @@ public class ClanController {
         if (StringUtils.isEmpty(uid)) {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
         }
-        if (StringUtils.isEmpty(tid)){
-            return ResponseBuilder.ERRORByJackson(10001,"请输入说说id");
+        if (StringUtils.isEmpty(tid)) {
+            return ResponseBuilder.ERRORByJackson(10001, "请输入说说id");
         }
-        clanService.pointGood(tid,uid);
+        clanService.pointGood(tid, uid);
         return ResponseBuilder.SUCCESSByJackson();
     }
 }

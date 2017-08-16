@@ -1,6 +1,7 @@
 package com.funny.service;
 
 import com.funny.model.domain.SayTable;
+import com.funny.util.ResponseBuilder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,5 +37,5 @@ public interface ClanService {
      *
      * @return
      */
-//    String getSayInfo();
+    ResponseBuilder.IResponseVo getSayInfo(int pageNumber, int pageSize);
 }
