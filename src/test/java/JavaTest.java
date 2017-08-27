@@ -19,6 +19,6 @@ public class JavaTest {
         );
 
 
-        System.out.println(QiniuImages.getQiniuImgUrl("13162211551.png"));
+        System.out.println(QiniuImages.getQiniuImgUrl("13120725361.png"));
     }
 }

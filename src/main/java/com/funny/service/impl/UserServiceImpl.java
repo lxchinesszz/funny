@@ -21,7 +21,15 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     public static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+
+
     private static final String[] niceName = {"喵星人", "汪星人", "外星人"};
+
+    public static final String[]provinces={"M78星云","潘多拉星","宜居星球"};
+
+    public static final String []citys={"汪星市","火星市","喵星市"};
+
+    public static final String[] motos={"一直有一个拯救世界的梦。后来和世界聊了聊，世界没理我","小时候，我最喜欢玩捉迷藏，等别人藏好了，我就回家吃饭。"," “你有超能力吗” “有啊 我超喜欢你”"};
 
     private static ArrayList<String> iconUrls = new ArrayList<>();
 
@@ -42,7 +50,18 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User login(User user) {
+        Random random = new Random();
+        int index = random.nextInt(3);
         String uid = user.getUid();
+        if(StringUtils.isEmpty(user.getProvince())){
+            user.setProvince(provinces[index]);
+        }
+        if (StringUtils.isEmpty(user.getCity())){
+            user.setCity(citys[index]);
+        }
+        if (StringUtils.isEmpty(user.getMoto())){
+            user.setMoto(motos[index]);
+        }
         boolean userFlag = mongoDao.isExistUser(uid);
         //如果返回true说明用户存在，就返回用户信息
         if (userFlag) {
@@ -80,6 +99,16 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isEmpty(user.getIconurl())) {
             user.setIconurl(iconUrls.get(index));
         }
+        if(StringUtils.isEmpty(user.getProvince())){
+            user.setProvince(provinces[index]);
+        }
+        if (StringUtils.isEmpty(user.getCity())){
+            user.setCity(citys[index]);
+        }
+        if (StringUtils.isEmpty(user.getMoto())){
+            user.setMoto(motos[index]);
+        }
+
         String accessToken = UUID.randomUUID().toString().replace("-", "").toUpperCase();
         user.setAccessToken(accessToken);
         String qiniuImgUrl = QiniuImages.getQiniuImgUrl(user.getIconurl());
@@ -107,12 +136,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         User accessToken = mongoDao.findOneByQuery(User.class, "accessToken", user.getAccessToken());
-        accessToken.setIconurl(user.getIconurl());
+        String qiniuImgUrl = QiniuImages.getQiniuImgUrl(user.getIconurl());
+        accessToken.setIconurl(qiniuImgUrl);
         accessToken.setName(user.getName());
         accessToken.setCity(user.getCity());
         accessToken.setGender(user.getGender());
         accessToken.setPassword(user.getPassword());
         accessToken.setUserPhone(user.getUserPhone());
+        accessToken.setMoto(user.getMoto());
+        accessToken.setProvince(user.getProvince());
         return mongoDao.saveUser(accessToken);
     }
 }

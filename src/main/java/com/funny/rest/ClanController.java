@@ -24,7 +24,7 @@ public class ClanController {
     ClanService clanService;
 
     /**
-     * 发说说
+     * 获取说说
      *
      * @return
      */

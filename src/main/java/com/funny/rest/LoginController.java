@@ -5,6 +5,7 @@ import com.funny.model.domain.User;
 import com.funny.service.UserService;
 import com.funny.util.CheckUserUtils;
 import com.funny.util.ResponseBuilder;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
@@ -64,6 +65,8 @@ public class LoginController {
      */
     @RequestMapping(value = "/funnyanimal/user/register", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseBuilder.IResponseVo register(@RequestBody User user) {
+
+        System.out.println(new Gson().toJson(user));
         if (StringUtils.isEmpty(user.getUserPhone())) {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
         }
@@ -71,19 +74,19 @@ public class LoginController {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USER_PASS);
         }
         User register = userService.register(user);
-        String accessToken = register.getAccessToken();
-        Map map = new HashMap();
-        map.put("accessToken", accessToken);
-        return ResponseBuilder.SUCCESSByJackson(map);
+//        String accessToken = register.getAccessToken();
+//        Map map = new HashMap();
+//        map.put("accessToken", accessToken);
+        return ResponseBuilder.SUCCESSByJackson(register);
     }
 
     /**
      * 本平台用户登陆
      * 通过用户手机号和密码验证
      *
-     * @param-userPhone 用户手机号
-     * @param-password  用户密码
      * @return
+     * @param-userPhone 用户手机号
+     * @param-password 用户密码
      */
     @RequestMapping(value = "/funnyanimal/user/login", method = RequestMethod.POST, produces = "application/json")
     public ResponseBuilder.IResponseVo loginByNative(@RequestBody User user) {
@@ -103,21 +106,22 @@ public class LoginController {
     /**
      * 修改用户信息
      *
-     * @param-userPhone 用户手机号
-     * @param-name      用户名
-     * @param-password  用户密码
-     * @param-iconurl   用户头像
-     * @param-gender    用户性别
-     * @param-province  省
-     * @param-city      城市
      * @return
+     * @param-userPhone 用户手机号
+     * @param-name 用户名
+     * @param-password 用户密码
+     * @param-iconurl 用户头像
+     * @param-gender 用户性别
+     * @param-province 省
+     * @param-city 城市
      */
-    @RequestMapping(value = "/funnyanimal/user/update", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/funnyanimal/user/update", method = RequestMethod.POST, produces = "application/json",consumes = "application/json")
     public ResponseBuilder.IResponseVo updateUserInfo(@RequestBody User user) {
         if (ObjectUtils.isEmpty(user)) {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
         }
-        return ResponseBuilder.SUCCESSByJackson(user);
+        User updateUser = userService.updateUser(user);
+        return ResponseBuilder.SUCCESSByJackson(updateUser);
     }
 
 }

@@ -18,10 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by mac on 2017/7/17.
@@ -72,10 +69,8 @@ public class ClanServiceImpl implements ClanService {
         PageRequest pageRequest = PageUtils.buildPageRequest(pageNumber, pageSize);
         Page<SayTable> timestamp = sayTableDao.findAll(pageRequest);
         List<SayTable> content = timestamp.getContent();
-        Map map=new LinkedMap();
-        map.put("says",content);
         if (content.size() > 0) {
-            return ResponseBuilder.SUCCESSByJackson(map);
+            return ResponseBuilder.SUCCESSByJackson(content);
         } else {
             return ResponseBuilder.ERRORByJackson(-1, "no centent");
         }

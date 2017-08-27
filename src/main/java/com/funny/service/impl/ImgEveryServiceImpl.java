@@ -3,13 +3,16 @@ package com.funny.service.impl;
 
 import com.funny.model.domain.ImageObj;
 import com.funny.service.ImgEveryService;
+import com.funny.util.QiniuImages;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.List;
 /**
  * Created by mac on 2017/6/26.
  */
+@Slf4j
 @Service
 public class ImgEveryServiceImpl implements ImgEveryService {
 
@@ -25,6 +29,15 @@ public class ImgEveryServiceImpl implements ImgEveryService {
     Environment environment;
     @Autowired
     MongoTemplate mongoTemplate;
+
+
+    @Override
+    public ImageObj addImage(ImageObj imageObj) {
+        String qiniuImgUrl = QiniuImages.getQiniuImgUrl(imageObj.getFileName());
+        imageObj.setImgUrl(qiniuImgUrl);
+        mongoTemplate.save(imageObj);
+        return imageObj;
+    }
 
     @Override
     public ImageObj getImage() {
