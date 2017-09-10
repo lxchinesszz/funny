@@ -17,6 +17,11 @@ import java.util.Date;
 public class LeaveTable {
     @Id
     private String id;
+
+    /**
+     * 留言的id
+     */
+    private String lid;
     /**
      * 说说Id
      */
@@ -37,4 +42,10 @@ public class LeaveTable {
      * 留言时间
      */
     private Date date;
+    /**
+     * 评论的评论的id
+     * 当对评论的进行评论
+     * 这个sonId,就是，对评论的id
+     */
+    private String subId;
 }

@@ -136,15 +136,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         User accessToken = mongoDao.findOneByQuery(User.class, "accessToken", user.getAccessToken());
-        String qiniuImgUrl = QiniuImages.getQiniuImgUrl(user.getIconurl());
-        accessToken.setIconurl(qiniuImgUrl);
-        accessToken.setName(user.getName());
-        accessToken.setCity(user.getCity());
-        accessToken.setGender(user.getGender());
-        accessToken.setPassword(user.getPassword());
-        accessToken.setUserPhone(user.getUserPhone());
-        accessToken.setMoto(user.getMoto());
-        accessToken.setProvince(user.getProvince());
+        if (!StringUtils.isEmpty(user.getIconurl())){
+            String qiniuImgUrl = QiniuImages.getQiniuImgUrl(user.getIconurl());
+            accessToken.setIconurl(qiniuImgUrl);
+        }
+        if (!StringUtils.isEmpty(user.getName())){
+            accessToken.setName(user.getName());
+        }
+        if (!StringUtils.isEmpty(user.getGender())){
+            accessToken.setGender(user.getGender());
+        }
+        if (!StringUtils.isEmpty(user.getCity())){
+            accessToken.setCity(user.getCity());
+        }
+        if (!StringUtils.isEmpty(user.getPassword())){
+            accessToken.setPassword(user.getPassword());
+        }
+        if (!StringUtils.isEmpty(user.getUserPhone())){
+            accessToken.setUserPhone(user.getUserPhone());
+        }
+        if (!StringUtils.isEmpty(user.getMoto())){
+            accessToken.setMoto(user.getMoto());
+        }
+        if (!StringUtils.isEmpty(user.getProvince())){
+            accessToken.setProvince(user.getProvince());
+        }
         return mongoDao.saveUser(accessToken);
     }
 }

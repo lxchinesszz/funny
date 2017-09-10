@@ -44,4 +44,14 @@ public class ImageObj {
      * 一句话
      */
     private String text;
+
+    /**
+     * 目前是一个图片，以后可以为视频或者其他url
+     */
+    private String metaUrl;
+
+    /**
+     * type:1.视频 2.网页 3.帖子
+     */
+    private String type;
 }

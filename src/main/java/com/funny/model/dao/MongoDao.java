@@ -165,4 +165,15 @@ public class MongoDao {
     }
 
 
+    /**
+     * 查询列表
+     *
+     * @param t
+     * @param <T>
+     * @return
+     */
+    public <T> List<T> findAll(Query query,Class<T> t) {
+        return mongoTemplate.find(query,t);
+    }
+
 }

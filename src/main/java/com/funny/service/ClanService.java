@@ -18,11 +18,12 @@ public interface ClanService {
 
     /**
      * @param tid     说说唯一id
-     * @param uid     留言用户id
      * @param leaveId 给留言的人的id
      * @param text    留言内存
+     * @param type    1.给帖子评论，2给回帖评论
+     * @param-uid 留言用户id
      */
-    void addLeave(String tid, String uid, String leaveId, String text);
+    void addLeave(String tid, String leaveId, String text, String type);
 
     //TODO 点赞
 
@@ -38,4 +39,7 @@ public interface ClanService {
      * @return
      */
     ResponseBuilder.IResponseVo getSayInfo(int pageNumber, int pageSize);
+
+
+    ResponseBuilder.IResponseVo getLeave(String tid, String type);
 }

@@ -56,14 +56,14 @@ public class ClanController {
      */
     @RequestMapping(value = "funnyanimal/v1/leave", method = RequestMethod.POST)
     public ResponseBuilder.IResponseVo addSay(@RequestBody Map boby) {
-        if (StringUtils.isEmpty((String) boby.get("uid"))) {
+        if (StringUtils.isEmpty((String) boby.get("tid"))) {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);
         }
         String tid = ((String) boby.get("tid"));
-        String uid = ((String) boby.get("uid"));
         String leaveId = ((String) boby.get("leaveId"));
         String text = ((String) boby.get("text"));
-        clanService.addLeave(tid, uid, leaveId, text);
+        String type = ((String) boby.get("type"));
+        clanService.addLeave(tid, leaveId, text,type);
         return ResponseBuilder.SUCCESSByJackson();
     }
 
@@ -85,5 +85,29 @@ public class ClanController {
         }
         clanService.pointGood(tid, uid);
         return ResponseBuilder.SUCCESSByJackson();
+    }
+
+    /**
+     * 根据TId获取评论
+     *
+     * @param tid
+     * @param-type 1：获取去帖子信息 2：获取留言信息
+     * @return
+     */
+    @RequestMapping(value = "funnyanimal/v1/leaves", method = RequestMethod.GET)
+    public ResponseBuilder.IResponseVo getLeave(String tid) {
+        ResponseBuilder.IResponseVo leave = clanService.getLeave(tid, "1");
+        return leave;
+    }
+
+    /**
+     * 获取回复信息
+     * @param tid
+     * @return
+     */
+    @RequestMapping(value = "funnyanimal/v1/reply", method = RequestMethod.GET)
+    public ResponseBuilder.IResponseVo getrReply(String tid){
+        ResponseBuilder.IResponseVo leave = clanService.getLeave(tid, "2");
+        return leave;
     }
 }

@@ -18,13 +18,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by liuxin on 2017/6/28.
@@ -89,10 +89,15 @@ public class AdminController {
      *
      * @return
      */
-    @RequestMapping(value = "admin/add/image", method =RequestMethod.POST, consumes = "application/json",produces = "application/json")
-    public String toAdmin(@RequestBody ImageObj imageObj,HttpServletResponse response) {
+    @ResponseBody
+    @RequestMapping(value = "/admin/index/add/image", produces = "application/json")
+    public String toAdmin(String fileName, String date, String author, String text) {
+        ImageObj imageObj = new ImageObj();
+        imageObj.setFileName(fileName);
+        imageObj.setDate(date);
+        imageObj.setAuthor(author);
+        imageObj.setText(text);
         logger.info(new Gson().toJson(imageObj));
-        response.setHeader("Allow","POST");
         if (StringUtils.isEmpty(imageObj.getFileName())) {
             logger.error("图片名不能为空");
         }
@@ -114,5 +119,36 @@ public class AdminController {
 
     }
 
+    @RequestMapping(value = "/admin/update/image", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
+    @ResponseBody
+    public String imgUpdate(@RequestParam(value = "file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return "文件不能为空";
+        }
+        // 获取文件名
+        String fileName = file.getOriginalFilename();
+        logger.info("上传的文件名为：" + fileName);
+        // 获取文件的后缀名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        logger.info("上传的后缀名为：" + suffixName);
+        // 文件上传后的路径
+        String filePath = "./";
+        // 解决中文问题，liunx下中文路径，图片显示问题
+        // fileName = UUID.randomUUID() + suffixName;
+        File dest = new File(filePath + fileName);
+        // 检测是否存在目录
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        }
+        try {
+            file.transferTo(dest);
+            return "文件成功";
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "文件上传失败";
 
+    }
 }

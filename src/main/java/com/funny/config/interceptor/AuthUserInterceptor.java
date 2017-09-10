@@ -27,6 +27,10 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         logger.info("===========================拦截器启动=============================");
         HandlerMethod methodHandler = (HandlerMethod) handler;
         request.setAttribute("starttime", System.currentTimeMillis());
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+//        response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+//        response.setHeader("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
         //从方法中获取该注解，如果注解不存在或者注解的不开启校验行为，则直接通过
         AuthCheckUser auth = methodHandler.getMethodAnnotation(AuthCheckUser.class);
         if (auth == null) {

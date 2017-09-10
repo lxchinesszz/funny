@@ -203,31 +203,31 @@
             var text=$('#text').val()
 //            var fileName=
 
-                    //发送到七牛服务器
+            //发送到七牛服务器
 
 
-                    //发送到后台
-                    $.ajax({
-                        type: 'POST',
-                        url:'http://127.0.0.1:8081/admin/add/image',
-                        async: false, // 使用同步方式
-                        // 1 需要使用JSON.stringify 否则格式为 a=2&b=3&now=14...
-                        // 2 需要强制类型转换，否则格式为 {"a":"2","b":"3"}
-                        data: JSON.stringify({
-                            "fileName":'test',
-                            "date":$('#mydate').val(),
-                            "author":$('#author').val(),
-                            "text":$('#text').val()
-                        }),
-                        crossDomain:true,
-                        dataType:"json",
-                        contentType: "application/json; charset=utf-8",
-                        success: function(data) {
-                            var str = JSON.stringify(data);
-                            var msg=data['message'];
-                            alert(msg)
-                        } // 注意不要在此行增加逗号
-                    });
+            //发送到后台
+            $.ajax({
+                type: 'POST',
+                url:'http://127.0.0.1:8081/admin/add/image',
+                async: false, // 使用同步方式
+                // 1 需要使用JSON.stringify 否则格式为 a=2&b=3&now=14...
+                // 2 需要强制类型转换，否则格式为 {"a":"2","b":"3"}
+                data: JSON.stringify({
+                    "fileName":'test',
+                    "date":$('#mydate').val(),
+                    "author":$('#author').val(),
+                    "text":$('#text').val()
+                }),
+                crossDomain:true,
+                dataType:"json",
+                contentType: "application/json; charset=utf-8",
+                success: function(data) {
+                    var str = JSON.stringify(data);
+                    var msg=data['message'];
+                    alert(msg)
+                } // 注意不要在此行增加逗号
+            });
 
 
             var imgageFoam =$(".file-footer-caption")
