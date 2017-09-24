@@ -3,19 +3,19 @@ package com.funny.service.impl;
 import com.funny.config.status.ResponseStatus;
 import com.funny.model.dao.MongoDao;
 import com.funny.model.dao.SayTableDao;
-import com.funny.model.domain.LeaveTable;
-import com.funny.model.domain.Reply;
-import com.funny.model.domain.SayTable;
-import com.funny.model.domain.User;
+import com.funny.model.domain.*;
 import com.funny.service.ClanService;
 import com.funny.util.PageUtils;
 import com.funny.util.QiniuImages;
 import com.funny.util.ResponseBuilder;
 import com.funny.util.UUIDUtils;
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.map.ListOrderedMap;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -60,13 +60,14 @@ public class ClanServiceImpl implements ClanService {
         String uid = mongoDao.findOne(tid1, SayTable.class).getUid();
         LeaveTable build = null;
         if (StringUtils.isEmpty(lid)) {
-            build = builder.tid(tid).uid(uid).leaveId(leaveId).leaveText(text).date(new Date()).lid(UUIDUtils.randomUUID()).build();
+            build = builder.tid(tid).uid(uid).leaveId(leaveId).leaveText(text).timestamp(new Date().getTime()).lid(UUIDUtils.randomUUID()).build();
         } else {
             //给评论评论;获取评论的信息，创建子评论，并将子评论id，给评论的fathd
             LeaveTable lid1 = mongoDao.findOne(Query.query(Criteria.where("lid").is(lid)), LeaveTable.class);
-            String sonId=UUIDUtils.randomUUID();
-            build = builder.uid(uid).leaveId(leaveId).leaveText(text).date(new Date()).lid(sonId).build();
+            String sonId = UUIDUtils.randomUUID();
+            build = builder.uid(uid).leaveId(leaveId).leaveText(text).timestamp(new Date().getTime()).lid(sonId).build();
             lid1.setSubId(sonId);
+            mongoDao.save(lid1, LeaveTable.class);
         }
         mongoDao.save(build, LeaveTable.class);
     }
@@ -82,12 +83,28 @@ public class ClanServiceImpl implements ClanService {
     }
 
     @Override
-    public ResponseBuilder.IResponseVo getSayInfo(int pageNumber, int pageSize) {
+    public ResponseBuilder.IResponseVo getSayInfo(String sayUid, int pageNumber, int pageSize) {
         PageRequest pageRequest = PageUtils.buildPageRequest(pageNumber, pageSize);
-        Page<SayTable> timestamp = sayTableDao.findAll(pageRequest);
-        List<SayTable> content = timestamp.getContent();
+        List<SayTable> content = null;
+        if (!StringUtils.isEmpty(sayUid)) {
+            Query query = Query.query(Criteria.where("uid").is(sayUid)).with(pageRequest);
+            content = mongoDao.findAll(query, SayTable.class);
+        } else {
+            Page<SayTable> timestamp = sayTableDao.findAll(pageRequest);
+            content = timestamp.getContent();
+        }
+        List<UserInfoAndSayTable> userInfoAndSayTables = new LinkedList<>();
+        for (SayTable sayTable : content) {
+            String uid = sayTable.getUid();
+            User uid1 = mongoDao.findOne(Query.query(Criteria.where("uid").is(uid)), User.class);
+            Map map = new LinkedHashMap();
+            map.put("say", sayTable);
+            map.put("userInfo", uid1);
+            UserInfoAndSayTable build = UserInfoAndSayTable.builder().userInfoSay(map).build();
+            userInfoAndSayTables.add(build);
+        }
         if (content.size() > 0) {
-            return ResponseBuilder.SUCCESSByJackson(content);
+            return ResponseBuilder.SUCCESSByJackson(userInfoAndSayTables);
         } else {
             return ResponseBuilder.ERRORByJackson(-1, "no centent");
         }
@@ -95,13 +112,21 @@ public class ClanServiceImpl implements ClanService {
 
 
     @Override
-    public ResponseBuilder.IResponseVo getLeave(String tid, String type) {
+    public ResponseBuilder.IResponseVo getLeave(String tid, String type, int pageNumber, int pageSize) {
         if (StringUtils.endsWithIgnoreCase("1", type)) {
             SayTable tid1 = mongoDao.findOne(Query.query(Criteria.where("tid").is(tid)), SayTable.class);
-            return ResponseBuilder.SUCCESSByJackson(tid1);
+            String uid = tid1.getUid();
+            User uid1 = mongoDao.findOne(Query.query(Criteria.where("uid").is(uid)), User.class);
+            Map map = new LinkedHashMap();
+            map.put("say", tid1);
+            map.put("userInfo", uid1);
+            return ResponseBuilder.SUCCESSByJackson(map);
         }
         if (StringUtils.endsWithIgnoreCase("2", type)) {
-            List<LeaveTable> tid2 = mongoDao.findAll(Query.query(Criteria.where("tid").is(tid)), LeaveTable.class);
+            Query query = Query.query(Criteria.where("tid").is(tid)).skip(pageNumber * pageSize).limit(pageSize);
+            query.with(
+                    new Sort(Sort.Direction.DESC, "timestamp"));
+            List<LeaveTable> tid2 = mongoDao.findAll(query, LeaveTable.class);
             List<Reply> replies = new ArrayList<>(24);
             //TODO 拼装评论信息
             for (LeaveTable lt : tid2) {
@@ -116,7 +141,7 @@ public class ClanServiceImpl implements ClanService {
                 replyBuilder.publishName(one.getName());
                 replyBuilder.publishLogo(one.getIconurl());
                 replyBuilder.publishId(lt.getLid());
-                replyBuilder.timestamp(lt.getDate().getTime() + "");
+                replyBuilder.timestamp(lt.getTimestamp() + "");
                 replyBuilder.description(lt.getLeaveText());
                 if (!StringUtils.isEmpty(lt.getSubId())) {
                     List<Reply> subReplies = new ArrayList<>(24);
@@ -131,7 +156,7 @@ public class ClanServiceImpl implements ClanService {
                     subReplyBuilder.publishName(subOne.getName());
                     subReplyBuilder.publishLogo(subOne.getIconurl());
                     subReplyBuilder.publishId(subLt.getLid());
-                    subReplyBuilder.timestamp(subLt.getDate().getTime() + "");
+                    subReplyBuilder.timestamp(subLt.getTimestamp() + "");
                     subReplyBuilder.description(subLt.getLeaveText());
                     Reply subReply = subReplyBuilder.build();
                     subReplies.add(subReply);

@@ -1,5 +1,6 @@
 package com.funny.service;
 
+import com.funny.model.domain.Banner;
 import com.funny.model.domain.ImageObj;
 import org.springframework.stereotype.Service;
 
@@ -48,4 +49,18 @@ public interface ImgEveryService {
      * @return
      */
     String getModifyImageToken(String fileModify);
+
+    /**
+     * 设置banner
+     * @param banner
+     * @return
+     */
+    Banner saveBanner(Banner banner);
+
+    /**
+     * 获取banner
+     * @param timestamp
+     * @return
+     */
+    List<Banner> getBanner(long timestamp,int pageSize);
 }

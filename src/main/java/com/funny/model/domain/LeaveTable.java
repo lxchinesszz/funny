@@ -41,7 +41,10 @@ public class LeaveTable {
     /**
      * 留言时间
      */
-    private Date date;
+    /**
+     * 发布日期
+     */
+    private Long timestamp;
     /**
      * 评论的评论的id
      * 当对评论的进行评论

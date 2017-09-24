@@ -6,6 +6,7 @@ import com.funny.model.domain.SayTable;
 import com.funny.service.ClanService;
 import com.funny.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,8 @@ public class ClanController {
      * @return
      */
     @RequestMapping(value = "funnyanimal/v1/say/page", method = RequestMethod.GET)
-    public ResponseBuilder.IResponseVo addSay(int pageNumber, int pageSize) {
-        return clanService.getSayInfo(pageNumber, pageSize);
+    public ResponseBuilder.IResponseVo addSay(String uid, int pageNumber, int pageSize) {
+        return clanService.getSayInfo(uid, pageNumber, pageSize);
     }
 
     /**
@@ -62,8 +63,8 @@ public class ClanController {
         String tid = ((String) boby.get("tid"));
         String leaveId = ((String) boby.get("leaveId"));
         String text = ((String) boby.get("text"));
-        String type = ((String) boby.get("type"));
-        clanService.addLeave(tid, leaveId, text,type);
+        String lid = ((String) boby.get("lid"));
+        clanService.addLeave(tid, leaveId, text, lid);
         return ResponseBuilder.SUCCESSByJackson();
     }
 
@@ -91,23 +92,27 @@ public class ClanController {
      * 根据TId获取评论
      *
      * @param tid
-     * @param-type 1：获取去帖子信息 2：获取留言信息
      * @return
+     * @param-type 1：获取去帖子信息 2：获取留言信息
      */
     @RequestMapping(value = "funnyanimal/v1/leaves", method = RequestMethod.GET)
     public ResponseBuilder.IResponseVo getLeave(String tid) {
-        ResponseBuilder.IResponseVo leave = clanService.getLeave(tid, "1");
+        ResponseBuilder.IResponseVo leave = clanService.getLeave(tid, "1", 0, 0);
         return leave;
     }
 
     /**
      * 获取回复信息
+     *
      * @param tid
      * @return
      */
     @RequestMapping(value = "funnyanimal/v1/reply", method = RequestMethod.GET)
-    public ResponseBuilder.IResponseVo getrReply(String tid){
-        ResponseBuilder.IResponseVo leave = clanService.getLeave(tid, "2");
+    public ResponseBuilder.IResponseVo getrReply(String tid, int pageNumber, int pageSize) {
+        if (pageNumber == 0 || pageSize == 0) {
+            ResponseBuilder.ERROR(-1, "pagetNumber/pageSize不能为空");
+        }
+        ResponseBuilder.IResponseVo leave = clanService.getLeave(tid, "2", pageNumber, pageSize);
         return leave;
     }
 }

@@ -1,6 +1,7 @@
 package com.funny.rest;
 
 import com.funny.config.status.ResponseStatus;
+import com.funny.model.domain.Banner;
 import com.funny.model.domain.ImageObj;
 import com.funny.service.ImgEveryService;
 import com.funny.util.ResponseBuilder;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,4 +67,12 @@ public class FunnyController {
         }
         return ResponseBuilder.SUCCESSByJackson(jsonObject);
     }
+
+    @RequestMapping(value = "funnyanimal/v1/banner", method = RequestMethod.GET)
+    public ResponseBuilder.IResponseVo getBanner() throws Exception {
+        List<Banner> banner = imgEveryService.getBanner(0, 30);
+        return ResponseBuilder.SUCCESSByJackson(banner);
+    }
+
+
 }

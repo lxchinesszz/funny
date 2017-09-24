@@ -38,8 +38,15 @@ public interface ClanService {
      *
      * @return
      */
-    ResponseBuilder.IResponseVo getSayInfo(int pageNumber, int pageSize);
+    ResponseBuilder.IResponseVo getSayInfo(String sayUid,int pageNumber, int pageSize);
 
-
-    ResponseBuilder.IResponseVo getLeave(String tid, String type);
+    /**
+     *
+     * @param tid
+     * @param type
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    ResponseBuilder.IResponseVo getLeave(String tid, String type,int pageNumber, int pageSize);
 }

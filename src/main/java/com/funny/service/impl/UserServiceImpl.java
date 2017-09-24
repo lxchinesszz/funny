@@ -7,7 +7,10 @@ import com.funny.util.QiniuImages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -22,14 +25,13 @@ public class UserServiceImpl implements UserService {
     public static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
-
     private static final String[] niceName = {"喵星人", "汪星人", "外星人"};
 
-    public static final String[]provinces={"M78星云","潘多拉星","宜居星球"};
+    public static final String[] provinces = {"M78星云", "潘多拉星", "宜居星球"};
 
-    public static final String []citys={"汪星市","火星市","喵星市"};
+    public static final String[] citys = {"汪星市", "火星市", "喵星市"};
 
-    public static final String[] motos={"一直有一个拯救世界的梦。后来和世界聊了聊，世界没理我","小时候，我最喜欢玩捉迷藏，等别人藏好了，我就回家吃饭。"," “你有超能力吗” “有啊 我超喜欢你”"};
+    public static final String[] motos = {"一直有一个拯救世界的梦。后来和世界聊了聊，世界没理我", "小时候，我最喜欢玩捉迷藏，等别人藏好了，我就回家吃饭。", " “你有超能力吗” “有啊 我超喜欢你”"};
 
     private static ArrayList<String> iconUrls = new ArrayList<>();
 
@@ -53,13 +55,13 @@ public class UserServiceImpl implements UserService {
         Random random = new Random();
         int index = random.nextInt(3);
         String uid = user.getUid();
-        if(StringUtils.isEmpty(user.getProvince())){
+        if (StringUtils.isEmpty(user.getProvince())) {
             user.setProvince(provinces[index]);
         }
-        if (StringUtils.isEmpty(user.getCity())){
+        if (StringUtils.isEmpty(user.getCity())) {
             user.setCity(citys[index]);
         }
-        if (StringUtils.isEmpty(user.getMoto())){
+        if (StringUtils.isEmpty(user.getMoto())) {
             user.setMoto(motos[index]);
         }
         boolean userFlag = mongoDao.isExistUser(uid);
@@ -84,6 +86,18 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * false
+     *
+     * @param accessToken
+     * @return
+     */
+    @Override
+    public User isQQRegister(String accessToken) {
+        User accessToken1 = mongoDao.findOne(Query.query(Criteria.where("accessToken").is(accessToken)), User.class);
+        return accessToken1;
+    }
+
+    /**
      * 本平台用户登陆
      *
      * @param user
@@ -99,13 +113,13 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isEmpty(user.getIconurl())) {
             user.setIconurl(iconUrls.get(index));
         }
-        if(StringUtils.isEmpty(user.getProvince())){
+        if (StringUtils.isEmpty(user.getProvince())) {
             user.setProvince(provinces[index]);
         }
-        if (StringUtils.isEmpty(user.getCity())){
+        if (StringUtils.isEmpty(user.getCity())) {
             user.setCity(citys[index]);
         }
-        if (StringUtils.isEmpty(user.getMoto())){
+        if (StringUtils.isEmpty(user.getMoto())) {
             user.setMoto(motos[index]);
         }
 
@@ -130,35 +144,36 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改用户信息
+     *
      * @param user
      * @return
      */
     @Override
     public User updateUser(User user) {
         User accessToken = mongoDao.findOneByQuery(User.class, "accessToken", user.getAccessToken());
-        if (!StringUtils.isEmpty(user.getIconurl())){
+        if (!StringUtils.isEmpty(user.getIconurl())) {
             String qiniuImgUrl = QiniuImages.getQiniuImgUrl(user.getIconurl());
             accessToken.setIconurl(qiniuImgUrl);
         }
-        if (!StringUtils.isEmpty(user.getName())){
+        if (!StringUtils.isEmpty(user.getName())) {
             accessToken.setName(user.getName());
         }
-        if (!StringUtils.isEmpty(user.getGender())){
+        if (!StringUtils.isEmpty(user.getGender())) {
             accessToken.setGender(user.getGender());
         }
-        if (!StringUtils.isEmpty(user.getCity())){
+        if (!StringUtils.isEmpty(user.getCity())) {
             accessToken.setCity(user.getCity());
         }
-        if (!StringUtils.isEmpty(user.getPassword())){
+        if (!StringUtils.isEmpty(user.getPassword())) {
             accessToken.setPassword(user.getPassword());
         }
-        if (!StringUtils.isEmpty(user.getUserPhone())){
+        if (!StringUtils.isEmpty(user.getUserPhone())) {
             accessToken.setUserPhone(user.getUserPhone());
         }
-        if (!StringUtils.isEmpty(user.getMoto())){
+        if (!StringUtils.isEmpty(user.getMoto())) {
             accessToken.setMoto(user.getMoto());
         }
-        if (!StringUtils.isEmpty(user.getProvince())){
+        if (!StringUtils.isEmpty(user.getProvince())) {
             accessToken.setProvince(user.getProvince());
         }
         return mongoDao.saveUser(accessToken);

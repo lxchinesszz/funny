@@ -1,6 +1,7 @@
 package com.funny.service.impl;
 
 
+import com.funny.model.domain.Banner;
 import com.funny.model.domain.ImageObj;
 import com.funny.service.ImgEveryService;
 import com.funny.util.QiniuImages;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -76,5 +78,18 @@ public class ImgEveryServiceImpl implements ImgEveryService {
         putPolicy.put("insertOnly", 0);
         putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
         return auth.uploadToken(bucket, fileModify, expireSeconds, putPolicy);
+    }
+
+    @Override
+    public Banner saveBanner(Banner banner) {
+        mongoTemplate.save(banner);
+        return banner;
+    }
+
+    @Override
+    public List<Banner> getBanner(long timestamp, int pageSize) {
+        Query timestamp1 = Query.query(Criteria.where("timestamp").gt(0)).limit(pageSize);
+        List<Banner> banners = mongoTemplate.find(timestamp1, Banner.class);
+        return banners;
     }
 }

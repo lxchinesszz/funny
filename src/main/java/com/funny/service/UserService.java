@@ -25,6 +25,13 @@ public interface UserService {
     boolean isRegister(String userPhone);
 
     /**
+     * 这个qq是否已经登录
+     * @param accessToken
+     * @return
+     */
+    User isQQRegister(String accessToken);
+
+    /**
      * 本平台用户注册
      * @param user
      * @return

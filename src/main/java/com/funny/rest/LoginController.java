@@ -35,8 +35,13 @@ public class LoginController {
         if (!StringUtils.isEmpty(userLoginMsg)) {
             return ResponseBuilder.ERRORByJackson(10001, userLoginMsg);
         }
-        User login = userService.login(user);
-        return ResponseBuilder.SUCCESSByJackson(login);
+        User qqRegister = userService.isQQRegister(user.getAccessToken());
+        if (ObjectUtils.isEmpty(qqRegister)) {
+            User login = userService.login(user);
+            return ResponseBuilder.SUCCESSByJackson(login);
+        }
+        return ResponseBuilder.SUCCESSByJackson(qqRegister);
+
     }
 
     /**
@@ -115,7 +120,7 @@ public class LoginController {
      * @param-province 省
      * @param-city 城市
      */
-    @RequestMapping(value = "/funnyanimal/user/update", method = RequestMethod.POST, produces = "application/json",consumes = "application/json")
+    @RequestMapping(value = "/funnyanimal/user/update", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseBuilder.IResponseVo updateUserInfo(@RequestBody User user) {
         if (ObjectUtils.isEmpty(user)) {
             return ResponseBuilder.ERRORByJackson(ResponseStatus.CHECK_USERID);

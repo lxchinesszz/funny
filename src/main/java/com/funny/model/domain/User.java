@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "funny_user")
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(value = {"id","password"})
+@JsonIgnoreProperties(value = {"id","password","_id"})
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class User {
     @Id

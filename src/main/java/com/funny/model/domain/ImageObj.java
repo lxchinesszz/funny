@@ -51,7 +51,9 @@ public class ImageObj {
     private String metaUrl;
 
     /**
-     * type:1.视频 2.网页 3.帖子
+     * type:1.视频 2.网页 3.帖子 4，图片
      */
     private String type;
+
+
 }
